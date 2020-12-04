@@ -9,21 +9,22 @@ public class ClassFrame extends JFrame {
     JTextField t1, t2;
     JButton b1, b2, b3;
     int numberOfStudent = 1;
+    public boolean isB2Pressed = false;
     public ArrayList<Integer> goalsArList = new ArrayList<>();
     MyListener myListener = new MyListener();
 
-    String sbc = "Середній бал класу:  _______________________________";
-    String nzb = "Кількість учнів з незадовільним балом(оцінка від 1 до 3): _";
-    String nb = "Кількість учнів з низьким балом(оцінка від 4 до 6): _______";
-    String sb = "Кількість учнів з середнім балом(оцінка від 7  до 9): _____";
-    String vb = "       Кількість учнів з високим балом(оцінка від 10 до 12): _____";
+    String sbc = "середній бал класу:";
+    String nzb = "число учнів з незадовільним балом(оцінка від 1 до 3):  ";
+    String nb =  "число учнів з низьким балом(оцінка від 4 до 6):               ";
+    String sb =  "число учнів з середнім балом(оцінка від 7  до 9):            ";
+    String vb =  "число учнів з високим балом(оцінка від 10 до 12):           ";
 
     ClassFrame(String s) {
         super(s);
         setLayout(new FlowLayout());
 
-        l1 = new JLabel("Введіть назву класу");
-        l2 = new JLabel("Введіть оцінку учня під номером ");
+        l1 = new JLabel("Клас № ");
+        l2 = new JLabel("Оцінка учня під № ");
         l3 = new JLabel(nzb);
         l4 = new JLabel(nb);
         l5 = new JLabel(sb);
@@ -41,17 +42,27 @@ public class ClassFrame extends JFrame {
         t2 = new JTextField(2);
 
         b1 = new JButton("Зарахувати");
+        b1.setBackground(Color.ORANGE);
+
         b2 = new JButton("Статистика успішності");
-        b3 = new JButton("       Очистити       ");
+        b2.setBackground(Color.ORANGE);
+
+        b3 = new JButton("         Очистити        ");
+        b3.setBackground(Color.ORANGE);
+
 
         add(l1);
         add(t1);
+        add(new JLabel("                                                              "));//correct
         add(l2);
         add(l13);
         add(t2);
+        add(new JLabel("    "));//correct
         add(b1);
+        add(new JLabel("                           "));
         add(b2);
         add(l7);
+        add(new JLabel("                                                        "));
         add(l12);
         add(l3);
         add(l8);
@@ -61,12 +72,11 @@ public class ClassFrame extends JFrame {
         add(l10);
         add(l6);
         add(l11);
-
-
         add(b3);
         b1.addActionListener(myListener);
         b2.addActionListener(myListener);
         b3.addActionListener(myListener);
+
 
     }
 
@@ -74,32 +84,33 @@ public class ClassFrame extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == b1) {
+            if (e.getSource() == b1 && !t1.getText().equals("")) {
                 try {
                     if (Integer.parseInt(t2.getText()) > 0 && Integer.parseInt(t2.getText()) < 13) {
                         goalsArList.add(Integer.parseInt(t2.getText()));
                         t2.setText(null);
                         l13.setText(String.valueOf(++numberOfStudent));
                     } else {
-                        JOptionPane.showMessageDialog(null, "Введіть правильно оцінку!!!");
+                        JOptionPane.showMessageDialog(null, "Введіть коректно оцінку (від 1 до 12) !!!");
                     }
                 } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Введіть число!!!");
+                    JOptionPane.showMessageDialog(null, "Введіть число від 1 до 12 !");
                 }
-
-
+            } else if (e.getSource() == b1 && t1.getText().equals("")) {
+                JOptionPane.showMessageDialog(null, "Спочатку заповніть поле з назвою класу!");
+                return;
             }
             if (e.getSource() == b2) {
-                if (t1.getText() != null && !goalsArList.isEmpty()) {
-                    l7.setText("Середній бал " + t1.getText() + " класу:____________________________");
+                if (!goalsArList.isEmpty()) {
+                    l7.setText("cередній бал " + t1.getText() + " класу: ");
+                    l12.setText(sbc(goalsArList));
+                    l11.setText(vb(goalsArList));
+                    l10.setText(sb(goalsArList));
+                    l9.setText(nb(goalsArList));
+                    l8.setText(nzb(goalsArList));
                 } else {
-                    JOptionPane.showMessageDialog(null, "Заповніть усі дані!!!");
+                    JOptionPane.showMessageDialog(null, "Не було введено жодної оцінки!");
                 }
-                l12.setText(sbc(goalsArList));
-                l11.setText(vb(goalsArList));
-                l10.setText(sb(goalsArList));
-                l9.setText(nb(goalsArList));
-                l8.setText(nzb(goalsArList));
             }
             if (e.getSource() == b3) {
                 goalsArList.clear();
